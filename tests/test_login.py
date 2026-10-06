@@ -1,42 +1,35 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-
-def test_login_exitoso():
-    # Iniciar el navegador
-    driver = webdriver.Chrome()
-
-    # Abrir página
-    driver.get("https://www.saucedemo.com/")
+from utils.helpers import iniciar_sesion
 
 
-    # Localizar elementos
-    user = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.ID, "user-name"))
-)
-    password = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.ID, "password"))
-)    
-    login_button = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.ID, "login-button"))
-)
+def test_login_exitoso(driver):
+    iniciar_sesion(driver)
 
-    # Completar formulario
-    user.send_keys("standard_user")
-    password.send_keys("secret_sauce")   
+    assert driver.current_url.endswith("/inventory.html")
 
-    # Hacer login
-    login_button.click()
+    espera = WebDriverWait(driver, 10)
 
-    # Validar URL después del login
-    assert driver.current_url == "https://www.saucedemo.com/inventory.html"
-
-    # Validar titulo
-    titulo = driver.find_element(By.CSS_SELECTOR, "[data-test='title']")
-    assert titulo.text == "Products"
+     # Validacion texto
+    logo = espera.until(
+        EC.visibility_of_element_located(
+            (By.CLASS_NAME, "app_logo")
+        )
+    )
     
-    driver.quit()
+    assert logo.text == "Swag Labs"
 
-# def test_login_usuario_invalido():
+    titulo = espera.until(
+        EC.visibility_of_element_located(
+            (By.CSS_SELECTOR, "[data-test='title']")
+        )
+    )
+    assert titulo.text == "Products"
+
+    
+
+
+
+
