@@ -1,35 +1,21 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from pages.login_page import LoginPage
+import pytest
+from utils.reader import read_users_csv
 
-from utils.helpers import iniciar_sesion
+@pytest.mark.parametrize(
+        "data",read_users_csv())
+def test_login(driver,data):
+    login_page = LoginPage(driver)
 
+    driver.get("https://www.saucedemo.com/")
 
-def test_login_exitoso(driver):
-    iniciar_sesion(driver)
+    login_page.login(data["usuario"],data["password"])
 
-    assert driver.current_url.endswith("/inventory.html")
-
-    espera = WebDriverWait(driver, 10)
-
-     # Validacion texto
-    logo = espera.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "app_logo")
-        )
-    )
-    
-    assert logo.text == "Swag Labs"
-
-    titulo = espera.until(
-        EC.visibility_of_element_located(
-            (By.CSS_SELECTOR, "[data-test='title']")
-        )
-    )
-    assert titulo.text == "Products"
-
-    
-
-
+    if (data["tipo_usuario"] == "True"):
+        assert "/inventory.html" in driver.current_url
+    elif data["tipo_usuario"] == "False":
+        error = login_page.obtener_mensaje_error()
+        print(error)
+        assert "Epic sadface" in error
 
 

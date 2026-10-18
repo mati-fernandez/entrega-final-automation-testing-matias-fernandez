@@ -1,58 +1,20 @@
-# buscar titulo "Swag Labs"
-# verificar menu
-# verificar filtro
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-
-from utils.helpers import iniciar_sesion
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
 
 def test_inventory(driver):
-    iniciar_sesion(driver)
+    login_page = LoginPage(driver)
+    inventory_page = InventoryPage(driver)
 
-    espera = WebDriverWait(driver, 10)
+    driver.get("https://www.saucedemo.com/")
 
-    assert driver.title == "Swag Labs"
+    login_page.login("standard_user","secret_sauce")
 
-    # Validacion texto
-    logo = espera.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "app_logo")
-        )
-    )    
+    productos = inventory_page.obtener_productos()
 
-    assert logo.text == "Swag Labs"
+    assert len(productos) > 0
 
-    titulo = espera.until(
-        EC.visibility_of_element_located(
-            (By.CSS_SELECTOR, "[data-test='title']")
-        )
-    )   
-    assert titulo.text == "Products"
+    assert inventory_page.obtener_nombre_primer_producto() == "Sauce Labs Backpack"
+    assert inventory_page.obtener_precio_primer_producto() == "$29.99"
 
-    productos = driver.find_elements(
-        By.CLASS_NAME, "inventory_item"
-    )
-    assert productos, "No se encontraron productos"
-    assert productos[0].is_displayed()
-
-    primero = productos[0]
-    nombre = primero.find_element(
-        By.CLASS_NAME, "inventory_item_name"
-    ).text
-    precio = primero.find_element(
-        By.CLASS_NAME, "inventory_item_price"
-    ).text
-
-    assert nombre
-    assert precio.startswith("$")
-
-    print(f"Primer producto: {nombre} - {precio}")
-
-    assert driver.find_element(
-        By.ID, "react-burger-menu-btn"
-    ).is_displayed()
-
-    assert driver.find_element(
-        By.CLASS_NAME, "product_sort_container"
-    ).is_displayed()
+    assert inventory_page.menu_visible()
+    assert inventory_page.filtro_visible()

@@ -2,10 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from utils.helpers import iniciar_sesion
-
 def test_carrito(driver):
-    iniciar_sesion(driver)
 
     espera = WebDriverWait(driver, 10)
 

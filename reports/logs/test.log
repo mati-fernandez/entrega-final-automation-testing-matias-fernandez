@@ -24,3 +24,4 @@
 2026-10-05 21:21:50,924 - INFO - Inicio de sesión exitoso
 2026-10-05 21:23:07,718 - INFO - Iniciando sesión en SauceDemo
 2026-10-05 21:23:08,555 - INFO - Inicio de sesión exitoso
+2026-10-18 19:54:09,335 - WARNING - Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
