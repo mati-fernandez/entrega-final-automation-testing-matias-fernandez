@@ -18,7 +18,9 @@ logging.basicConfig(
 
 @pytest.fixture
 def driver():
-    navegador = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_argument("--incognito")
+    navegador = webdriver.Chrome(options=options)
     yield navegador
     navegador.quit()
 

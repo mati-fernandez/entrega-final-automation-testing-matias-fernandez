@@ -1,37 +1,34 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium import webdriver
 
-def test_carrito(driver):
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
+from pages.cart_page import CartPage
 
-    espera = WebDriverWait(driver, 10)
+from utils.reader import read_productos_json
 
-    producto = espera.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "inventory_item")
-        )
-    )
+def test_cart(driver):
+    login_page = LoginPage(driver)
+    inventory_page = InventoryPage(driver)
+    cart_page = CartPage(driver)
 
-    nombre = producto.find_element(
-        By.CLASS_NAME, "inventory_item_name"
-    ).text
+    driver.get("https://www.saucedemo.com/")
 
-    producto.find_element(By.TAG_NAME, "button").click()
+    login_page.login("standard_user","secret_sauce")
 
-    contador = espera.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "shopping_cart_badge")
-        )
-    )
-    assert contador.text == "1"
+    # Leer el primer producto del JSON
+    producto = read_productos_json()[0]
+    print(producto)
 
-    driver.find_element(
-        By.CLASS_NAME, "shopping_cart_link"
-    ).click()
+    # Agregar producto del JSON
+    inventory_page.agregar_producto(producto["nombre"])
 
-    producto_carrito = espera.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "inventory_item_name")
-        )
-    )
-    assert producto_carrito.text == nombre
+    assert inventory_page.obtener_contador_carrito() == "1"
+
+    # Ir al carrito
+    inventory_page.ir_al_carrito()
+
+    # Validar nombre contra el JSON
+    assert cart_page.obtener_nombre_producto() == producto["nombre"]
+
+    # Validar precio contra el JSON
+    assert cart_page.obtener_precio_producto() == producto["precio"]
