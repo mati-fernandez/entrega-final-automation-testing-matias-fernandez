@@ -1,7 +1,20 @@
 import pytest
 import logging
+import os
+
 from pathlib import Path
 from selenium import webdriver
+from dotenv import load_dotenv
+
+load_dotenv()
+
+@pytest.fixture
+def base_url():
+    return "https://reqres.in/api"
+
+@pytest.fixture
+def headers():
+    return {"x-api-key": os.getenv("REQRES_API_KEY")}
 
 
 SCREENSHOTS_DIR = Path("reports/screenshots")

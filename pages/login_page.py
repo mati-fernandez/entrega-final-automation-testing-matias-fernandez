@@ -19,7 +19,7 @@ class LoginPage:
 
     def obtener_mensaje_error(self):
         texto_error = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,".error > h3")))
-        return texto_error.text
+        return texto_error.texts
 
     def login(self,usuario,password):
         self.ingresar_usuario(usuario)
