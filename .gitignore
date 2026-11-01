@@ -4,4 +4,4 @@ __pycache__/
 .env
 ejercicio_extra/
 .pytest_cache/
-
+reports/

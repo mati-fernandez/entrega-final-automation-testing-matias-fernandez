@@ -1,6 +1,7 @@
 import pytest
-import logging
 import os
+import base64
+import pytest_html
 
 from pathlib import Path
 from selenium import webdriver
@@ -16,18 +17,7 @@ def base_url():
 def headers():
     return {"x-api-key": os.getenv("REQRES_API_KEY")}
 
-
 SCREENSHOTS_DIR = Path("reports/screenshots")
-
-LOGS_DIR = Path("reports/logs")
-LOGS_DIR.mkdir(parents=True, exist_ok=True)
-
-logging.basicConfig(
-    filename=LOGS_DIR / "test.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
 
 @pytest.fixture
 def driver():
@@ -37,9 +27,8 @@ def driver():
     yield navegador
     navegador.quit()
 
-
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport(item):
     resultado = yield
     reporte = resultado.get_result()
 
@@ -53,3 +42,8 @@ def pytest_runtest_makereport(item, call):
             ruta = SCREENSHOTS_DIR / nombre
 
             driver.save_screenshot(str(ruta))
+
+            imagen = base64.b64encode(ruta.read_bytes()).decode("utf-8")
+            reporte.extras = [
+                pytest_html.extras.png(imagen, name="Screenshot")
+            ]
