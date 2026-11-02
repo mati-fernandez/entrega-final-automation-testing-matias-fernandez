@@ -2,6 +2,7 @@ import pytest
 import os
 import base64
 import pytest_html
+from datetime import datetime
 
 from pathlib import Path
 from selenium import webdriver
@@ -38,7 +39,8 @@ def pytest_runtest_makereport(item):
         if driver:
             SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
 
-            nombre = f"{item.name}.png"
+            fecha_hora = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            nombre = f"{fecha_hora}_{item.name}.png"
             ruta = SCREENSHOTS_DIR / nombre
 
             driver.save_screenshot(str(ruta))

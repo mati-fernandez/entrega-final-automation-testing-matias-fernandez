@@ -92,3 +92,6 @@ pytest tests/test_login.py
 Las capturas se generan automáticamente cuando falla una prueba y se adjuntan al reporte HTML.
 
 El directorio `reports/` está excluido del control de versiones porque contiene archivos generados durante las ejecuciones.
+
+El reporte HTML muestra cada prueba ejecutada, su estado y duración. Al abrir una prueba fallida, se puede consultar el detalle del error y la captura de pantalla adjunta, si corresponde.
+
