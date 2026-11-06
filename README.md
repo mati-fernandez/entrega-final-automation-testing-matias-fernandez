@@ -12,6 +12,7 @@ Proyecto de automatización de pruebas funcionales y de API realizado con Python
 - python-dotenv
 - Git
 - GitHub
+- GitHub Actions
 
 ## Instalación
 
@@ -21,7 +22,18 @@ Crear y activar un entorno virtual:
 
 ```bash
 python -m venv .venv
+```
+
+Activar el entorno virtual:
+
+**Windows (Git Bash):**
+```bash
 source .venv/Scripts/activate
+```
+
+**Linux / macOS:**
+```bash
+source .venv/bin/activate
 ```
 
 Instalar las dependencias:
@@ -95,3 +107,8 @@ El directorio `reports/` está excluido del control de versiones porque contiene
 
 El reporte HTML muestra cada prueba ejecutada, su estado y duración. Al abrir una prueba fallida, se puede consultar el detalle del error y la captura de pantalla adjunta, si corresponde.
 
+## Integración continua
+
+El proyecto utiliza **GitHub Actions** para ejecutar automáticamente la suite de pruebas ante cada `push` o `pull_request` dirigido a la rama `master`.
+
+El workflow configura el entorno de Python, instala las dependencias y ejecuta las pruebas. Al finalizar, publica el reporte HTML como artefacto descargable desde la sección **Actions** del repositorio, incluso cuando alguna prueba falla.
