@@ -24,6 +24,12 @@ SCREENSHOTS_DIR = Path("reports/screenshots")
 def driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--incognito")
+
+    if os.getenv("CI"):
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
     navegador = webdriver.Chrome(options=options)
     yield navegador
     navegador.quit()
